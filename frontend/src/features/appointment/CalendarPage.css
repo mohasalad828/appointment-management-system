@@ -1,0 +1,48 @@
+/* CalendarPage.css */
+
+.calendar-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5; /* Neutral background */
+}
+
+.calendar-container {
+  width: 85%;
+  max-width: 700px;
+  padding: 30px;
+  background-color: #ffffff; /* White container for the calendar */
+  border-radius: 15px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.react-calendar {
+  width: 100%;
+  border: none;
+  font-family: Arial, sans-serif;
+}
+
+.highlighted-date {
+  background-color: var(
+    --category-color,
+    #3498db
+  ) !important; /* Use category color for highlight */
+  color: white !important;
+  border-radius: 8px;
+}
+
+.react-calendar__tile--now {
+  background-color: #f39c12 !important; /* Color for today’s date */
+  color: white !important;
+  border-radius: 8px;
+}
