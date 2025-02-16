@@ -1,7 +1,7 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
-import { cilCalendar, cilPeople, cilSpeedometer } from '@coreui/icons' // Import cilSpeedometer
-import { CNavItem, CNavTitle } from '@coreui/react'
+import { cilCalendar, cilClipboard, cilFolderOpen, cilPeople, cilSpeedometer } from '@coreui/icons' // Import cilSpeedometer
+import { CNavItem, CNavTitle, CNavGroup } from '@coreui/react'
 
 const _nav = [
   {
@@ -15,7 +15,7 @@ const _nav = [
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />, // Add the icon for dashboard
     badge: {
       color: 'info',
-      text: 'NEW', // Badge text and color
+      // text: 'NEW', // Badge text and color
     },
   },
   {
@@ -32,9 +32,22 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Users',
+    name: 'Admin',
     to: '/users',
     icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavGroup,
+    name: 'Reports',
+    icon: <CIcon icon={cilFolderOpen} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Appointment Reports',
+        to: '/reports/appointments',
+        icon: <CIcon icon={cilClipboard} customClassName="nav-icon" />,
+      },
+    ],
   },
 ]
 

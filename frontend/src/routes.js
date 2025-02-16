@@ -9,6 +9,7 @@ const Users = React.lazy(() => import('./features/user/Users')) // Import Users 
 const Category = React.lazy(() => import('./features/category/Categories'))
 // const CalendarView = React.lazy(() => import('./features/appointment/CalendarView'))
 const CalendarPage = React.lazy(() => import('./features/appointment/CalendarPage'))
+const AppointmentsReport = React.lazy(() => import('./features/report/AppointmentsReport'))
 
 // import CalendarPage from './features/appointment/CalendarPage' // New route for CalendarView
 
@@ -27,6 +28,7 @@ const routes = [
   { path: '/users', name: 'Users', element: Users }, // Add Users route here
   // { path: '/calendar-view', name: 'Calendar View', element: CalendarView },
   { path: '/calendar', name: 'Calendar', element: CalendarPage },
+  { path: '/reports/appointments', name: 'Appointment Reports', element: AppointmentsReport },
 ]
 
 export default routes

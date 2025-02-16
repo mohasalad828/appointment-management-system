@@ -1,47 +1,16 @@
 const Appointment = require("../models/appointmentModel");
+const UserModel = require("../models/UserModel");
+const notificationService = require("../services/notificationService");
 const appointmentValidation = require("../validations/appointmentValidation");
+const moment = require('moment');
 
 // Get all appointments
-// exports.getAllAppointments = async (req, res) => {
-//   try {
-//     const appointments = await Appointment.find()
-//       .populate("userId", "name email") // Populate user data
-//       .populate("categoryId", "name"); // Populate category data
-
-//     res.status(200).json({
-//       status: "success",
-//       results: appointments.length,
-//       data: { appointments },
-//     });
-//   } catch (error) {
-//     res.status(500).json({ status: "fail", message: error.message });
-//   }
-// };
-
-// exports.getAllAppointments = async (req, res) => {
-//   try {
-//     const appointments = await Appointment.find({
-//       userId: req.user.id,
-//     })
-//       .populate("userId", "name email")
-//       .populate("categoryId", "name");
-
-//     res.status(200).json({
-//       status: "success",
-//       results: appointments.length,
-//       data: { appointments },
-//     });
-//   } catch (error) {
-//     res.status(500).json({ status: "fail", message: error.message });
-//   }
-// };
-
 exports.getAllAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find()
-      .populate("userId", "name email") // Include only `name` and `email` for `userId`
-      .populate("categoryId", "name") // Include only `name` for `categoryId`
-      .select("-__v"); // Exclude `__v` from results
+      .populate("userId", "name email")
+      .populate("categoryId", "name")
+      .select("-__v");
 
     res.status(200).json({
       status: "success",
@@ -66,46 +35,21 @@ exports.getAppointmentById = async (req, res) => {
         .json({ status: "fail", message: "Appointment not found" });
     }
 
-    res
-      .status(200)
-      .json({ status: "success", data: { appointment } });
+    res.status(200).json({ status: "success", data: { appointment } });
   } catch (error) {
     res.status(500).json({ status: "fail", message: error.message });
   }
 };
 
-// Create an appointment
-// exports.createAppointment = async (req, res) => {
-//   try {
-//     const { error } = appointmentValidation(req.body);
-//     if (error) {
-//       return res
-//         .status(400)
-//         .json({ status: "fail", message: error.message });
-//     }
-
-//     const newAppointment = await Appointment.create({
-//       // userId: req.user.id,
-//       userId: req.user.id, // Set userId from authenticated user
-//       categoryId: req.body.categoryId,
-//       title: req.body.title,
-//       location: req.body.location,
-//       date: req.body.date,
-//       time: req.body.time,
-//       status: req.body.status || "Pending",
-//     });
-
-//     res.status(201).json({
-//       status: "success",
-//       data: { appointment: newAppointment },
-//     });
-//   } catch (error) {
-//     res.status(500).json({ status: "fail", message: error.message });
-//   }
-// };
-
+// Create a new appointment with SMS notification
 exports.createAppointment = async (req, res) => {
   try {
+    // Validation
+    const { error } = appointmentValidation(req.body);
+    if (error) {
+      return res.status(400).json({ status: "fail", message: error.message });
+    }
+
     const newAppointment = await Appointment.create({
       userId: req.user.id,
       categoryId: req.body.categoryId,
@@ -116,6 +60,9 @@ exports.createAppointment = async (req, res) => {
       endDate: req.body.endDate,
       status: req.body.status || "Pending",
     });
+
+    const user = await UserModel.findById(req.user.id);
+    await notificationService.sendNewAppointmentNotification(user, newAppointment);
 
     res.status(201).json({
       status: "success",
@@ -131,9 +78,7 @@ exports.updateAppointment = async (req, res) => {
   try {
     const { error } = appointmentValidation(req.body);
     if (error) {
-      return res
-        .status(400)
-        .json({ status: "fail", message: error.message });
+      return res.status(400).json({ status: "fail", message: error.message });
     }
 
     const appointment = await Appointment.findByIdAndUpdate(
@@ -150,9 +95,7 @@ exports.updateAppointment = async (req, res) => {
         .json({ status: "fail", message: "Appointment not found" });
     }
 
-    res
-      .status(200)
-      .json({ status: "success", data: { appointment } });
+    res.status(200).json({ status: "success", data: { appointment } });
   } catch (error) {
     res.status(500).json({ status: "fail", message: error.message });
   }
@@ -161,9 +104,7 @@ exports.updateAppointment = async (req, res) => {
 // Delete an appointment
 exports.deleteAppointment = async (req, res) => {
   try {
-    const appointment = await Appointment.findByIdAndDelete(
-      req.params.id
-    );
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
     if (!appointment) {
       return res
         .status(404)
@@ -172,5 +113,37 @@ exports.deleteAppointment = async (req, res) => {
     res.status(204).json({ status: "success", data: null });
   } catch (error) {
     res.status(500).json({ status: "fail", message: error.message });
+  }
+};
+
+// Get appointment reports
+exports.getAppointmentReports = async (req, res) => {
+  try {
+    const { startDate, categoryId, status } = req.query;
+    const filter = {};
+
+    // Apply filters if provided
+    if (startDate) {
+      filter.startDate = { $gte: new Date(startDate) };
+    }
+    if (categoryId) {
+      filter.categoryId = categoryId;
+    }
+    if (status) {
+      filter.status = status;
+    }
+
+    const appointments = await Appointment.find(filter)
+      .populate("userId", "fullName email")
+      .populate("categoryId", "name");
+
+    res.status(200).json({
+      status: "success",
+      results: appointments.length,
+      data: { appointments },
+    });
+  } catch (error) {
+    console.error("Error in getAppointmentReports:", error.message);
+    res.status(500).json({ status: "fail", message: "Server error" });
   }
 };

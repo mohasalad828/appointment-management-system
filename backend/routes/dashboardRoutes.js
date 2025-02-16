@@ -8,6 +8,7 @@ const {
   getAppointmentsSummary,
   getMostAppointmentUser,
   getUserDashboardStats,
+  getCategorySummary,
 } = require("../controllers/dashboardController");
 
 const router = express.Router();
@@ -36,7 +37,9 @@ router.get(
   authMiddleware,
   getMostAppointmentUser
 );
+// router.get("/category-summary", authMiddleware, getCategorySummary)
 
 router.get("/user-stats", authMiddleware, getUserDashboardStats);
+
 
 module.exports = router;

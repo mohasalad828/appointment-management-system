@@ -361,7 +361,7 @@ const Users = () => {
     password: '',
     gender: '',
     phone: '',
-    role: 'User',
+    // role: 'User',
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
@@ -458,7 +458,7 @@ const Users = () => {
       password: '',
       gender: '',
       phone: '',
-      role: 'User',
+      // role: 'User',
     })
   }
 
@@ -497,7 +497,7 @@ const Users = () => {
                   <CTableHeaderCell>Email</CTableHeaderCell>
                   <CTableHeaderCell>Gender</CTableHeaderCell>
                   <CTableHeaderCell>Phone</CTableHeaderCell>
-                  <CTableHeaderCell>Role</CTableHeaderCell>
+                  {/* <CTableHeaderCell>Role</CTableHeaderCell> */}
                   <CTableHeaderCell>Actions</CTableHeaderCell>
                 </CTableRow>
               </CTableHead>
@@ -509,7 +509,7 @@ const Users = () => {
                     <CTableDataCell>{user.email}</CTableDataCell>
                     <CTableDataCell>{user.gender}</CTableDataCell>
                     <CTableDataCell>{user.phone}</CTableDataCell>
-                    <CTableDataCell>{user.role}</CTableDataCell>
+                    {/* <CTableDataCell>{user.role}</CTableDataCell> */}
                     <CTableDataCell>
                       <CButton
                         color="info"
@@ -621,7 +621,7 @@ const Users = () => {
                   />
                 </CCol>
                 <CCol md={6}>
-                  <CFormSelect
+                  {/* <CFormSelect
                     label="Role"
                     name="role"
                     value={form.role}
@@ -630,7 +630,7 @@ const Users = () => {
                   >
                     <option value="User">User</option>
                     <option value="Admin">Admin</option>
-                  </CFormSelect>
+                  </CFormSelect> */}
                 </CCol>
               </CRow>
             </CForm>

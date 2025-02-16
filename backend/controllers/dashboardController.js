@@ -181,3 +181,31 @@ exports.getUserDashboardStats = async (req, res) => {
     res.status(500).json({ status: "fail", message: error.message });
   }
 };
+
+exports.getCategorySummary = async (req, res) => {
+  try {
+    const categorySummary = await CategoryModel.aggregate([
+      {
+        $lookup: {
+          from: 'appointments',
+          localField: '_id',
+          foreignField: 'categoryId',
+          as: 'appointments',
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          count: { $size: '$appointments' },
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: categorySummary,
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'fail', message: error.message });
+  }
+};

@@ -38,6 +38,8 @@ const appointmentSchema = new mongoose.Schema(
       enum: ["Pending", "Process", "Cancelled", "Completed"],
       default: "Pending",
     },
+    oneDayReminderSent: { type: Boolean, default: false },
+    timeReachedReminderSent: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

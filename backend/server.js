@@ -4,13 +4,13 @@ const cors = require("cors");
 
 dotenv.config({ path: "./config.env" });
 const app = require("./app");
+require("./scheduler"); // Import the scheduler to start background jobs
 app.use(cors());
 
 const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
-  process.env.DATABASE_PjASSWORD
+  process.env.DATABASE_PASSWORD
 );
-// const DB = process.env.DATABASE_LOCAL;
 
 mongoose
   .connect(DB, {

@@ -326,10 +326,15 @@ const Appointments = ({ userId }) => {
   //   const url = `${window.location.origin}/calendar?appointmentDate=${appointment.startDate}&categoryColor=${appointment.categoryId.color}`
   //   window.open(url, '_blank', 'fullscreen=yes')
   // }
+  // const handleViewCalendar = (appointment) => {
+  //   const url = `${window.location.origin}/calendar?appointmentDate=${appointment.startDate}&categoryId=${appointment.categoryId}`
+  //   window.open(url, '_blank', 'width=800,height=600')
+  // }
   const handleViewCalendar = (appointment) => {
-    const url = `${window.location.origin}/calendar?appointmentDate=${appointment.startDate}&categoryId=${appointment.categoryId}`
-    window.open(url, '_blank', 'width=800,height=600')
+    const url = `${window.location.origin}/calendar?appointmentDate=${appointment.startDate}&categoryColor=${appointment.categoryId.color}`
+    window.open(url, '_blank')
   }
+
 
   const resetForm = () => {
     setForm({
